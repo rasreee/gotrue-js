@@ -1,3 +1,4 @@
+
 export type Provider =
   | 'azure'
   | 'bitbucket'
@@ -116,3 +117,18 @@ export interface VerifyOTPParams {
   phone: string
   token: string
 }
+
+interface GoTrueResponseBase {
+  status?: number
+}
+
+
+export interface GoTrueResponseSuccess  extends GoTrueResponseBase {
+  user: User; error: null;
+}
+
+export interface GoTrueResponseFailure  extends GoTrueResponseBase {
+  user: null; error: Error;
+}
+
+export type GoTrueResponse = GoTrueResponseSuccess | GoTrueResponseFailure

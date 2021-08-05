@@ -1,5 +1,5 @@
 import { get, post, put, remove } from './lib/fetch'
-import { Session, Provider, UserAttributes, CookieOptions, User } from './lib/types'
+import { Session, Provider, UserAttributes, CookieOptions, User, GoTrueResponse } from './lib/types'
 import { COOKIE_OPTIONS } from './lib/constants'
 import { setCookie, deleteCookie } from './lib/cookies'
 import { expiresAt } from './lib/helpers'
@@ -316,12 +316,12 @@ export default class GoTrueApi {
    */
   async getUser(
     jwt: string
-  ): Promise<{ user: User | null; data: User | null; error: Error | null }> {
+  ): Promise<GoTrueResponse> {
     try {
       const data: any = await get(`${this.url}/user`, { headers: this._createRequestHeaders(jwt) })
-      return { user: data, data, error: null }
+      return { user: data, error: null }
     } catch (error) {
-      return { user: null, data: null, error }
+      return { user: null, error }
     }
   }
 
@@ -333,14 +333,14 @@ export default class GoTrueApi {
   async updateUser(
     jwt: string,
     attributes: UserAttributes
-  ): Promise<{ user: User | null; data: User | null; error: Error | null }> {
+  ): Promise<GoTrueResponse> {
     try {
       const data: any = await put(`${this.url}/user`, attributes, {
         headers: this._createRequestHeaders(jwt),
       })
-      return { user: data, data, error: null }
+      return { user: data, error: null }
     } catch (error) {
-      return { user: null, data: null, error }
+      return { user: null, error }
     }
   }
 
@@ -352,7 +352,7 @@ export default class GoTrueApi {
   async deleteUser(
     uid: string,
     jwt: string
-  ): Promise<{ user: User | null; data: User | null; error: Error | null }> {
+  ): Promise<GoTrueResponse> {
     try {
       const data: any = await remove(
         `${this.url}/admin/users/${uid}`,
@@ -361,9 +361,9 @@ export default class GoTrueApi {
           headers: this._createRequestHeaders(jwt),
         }
       )
-      return { user: data, data, error: null }
+      return { user: data, error: null }
     } catch (error) {
-      return { user: null, data: null, error }
+      return { user: null, error }
     }
   }
 
@@ -420,7 +420,7 @@ export default class GoTrueApi {
    */
   async getUserByCookie(
     req: any
-  ): Promise<{ user: User | null; data: User | null; error: Error | null }> {
+  ): Promise<GoTrueResponse> {
     try {
       if (!req.cookies)
         throw new Error(
@@ -428,11 +428,11 @@ export default class GoTrueApi {
         )
       if (!req.cookies[this.cookieOptions.name!]) throw new Error('No cookie found!')
       const token = req.cookies[this.cookieOptions.name!]
-      const { user, error } = await this.getUser(token)
-      if (error) throw error
-      return { user, data: user, error: null }
+      const response = await this.getUser(token)
+      if (response.error) throw response.error
+      return {user:response.user, error: null}
     } catch (error) {
-      return { user: null, data: null, error }
+      return { user: null, error }
     }
   }
 
