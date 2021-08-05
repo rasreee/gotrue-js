@@ -1,5 +1,5 @@
 {
-  "name": "@rasreee/gotrue-js",
+  "name": "@rasreee/supabase-gotrue-js",
   "version": "0.0.1",
   "description": "Isomorphic GoTrue client",
   "keywords": [
@@ -16,7 +16,7 @@
   ],
   "main": "dist/main/index.js",
   "module": "dist/module/index.js",
-  "repository": "supabase/gotrue-js",
+  "repository": "https://github.com/supabase/gotrue-js",
   "scripts": {
     "clean": "rimraf dist docs",
     "format": "prettier --write \"{src,test}/**/*.ts\"",
